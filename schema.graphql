@@ -1,5 +1,3 @@
-# @contact isn't being printed to the generated-schema.graphql file
-# See https://github.com/apollographql/federation/issues/1847
 directive @contact(
   "Contact title of the subgraph owner"
   name: String!
@@ -11,32 +9,42 @@ directive @contact(
 
 extend schema
   @contact(
-    name: "Thing Server Team"
+    name: "Subgraph Team"
     url: "https://myteam.slack.com/archives/teams-chat-room-url"
     description: "send urgent issues to [#oncall](https://yourteam.slack.com/archives/oncall)."
   )
   @link(
     url: "https://specs.apollo.dev/federation/v2.3",
     import: [
-      "@key", "@extends", "@shareable", "@inaccessible", "@override", "@external", "@provides", "@requires", "@tag",
-      "@composeDirective", "@interfaceObject"
+      "@key", "@shareable", "@external", "@requires"
     ]
   )
 
 type Query {
-  thing(id: ID!): Thing
+  "Get a product by ID"
+  product(id: ID!): Product
+  "Get all products"
+  products: [Product!]!
 }
 
 type Mutation {
-  createThing(thing: CreateThing!): Thing
+  "Create a new product"
+  createProduct(input: CreateProductInput!): Product!
 }
 
-type Thing @key(fields: "id") {
+"""
+A product in the catalog.
+This is an entity that can be resolved across subgraphs.
+"""
+type Product @key(fields: "id") {
   id: ID!
-  name: String
+  name: String!
+  price: Float!
+  inStock: Boolean!
 }
 
-input CreateThing {
-  id: ID!
-  name: String
+input CreateProductInput {
+  name: String!
+  price: Float!
+  inStock: Boolean
 }

@@ -1,11 +1,10 @@
+import { Resolvers } from "../__generated__/resolvers-types";
 import { Query } from "./Query";
 import { Mutation } from "./Mutation";
-import { Thing } from "./Thing";
+import { Product } from "./Product";
 
-const resolvers = {
-  ...Query,
-  ...Mutation,
-  ...Thing,
+export const resolvers: Resolvers = {
+  Query,
+  Mutation,
+  Product,
 };
-
-export default resolvers;

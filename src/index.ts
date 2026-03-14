@@ -6,7 +6,7 @@ import {
   StandaloneServerContextFunctionArgument,
   startStandaloneServer,
 } from "@apollo/server/standalone";
-import resolvers from "./resolvers";
+import { resolvers } from "./resolvers";
 import { DataSourceContext } from "./types/DataSourceContext";
 import { GraphQLError } from "graphql";
 
