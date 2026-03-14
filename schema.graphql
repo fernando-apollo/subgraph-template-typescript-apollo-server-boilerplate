@@ -14,7 +14,7 @@ extend schema
     description: "send urgent issues to [#oncall](https://yourteam.slack.com/archives/oncall)."
   )
   @link(
-    url: "https://specs.apollo.dev/federation/v2.9",
+    url: "https://specs.apollo.dev/federation/v2.13",
     import: [
       "@key", "@shareable", "@external", "@requires",
       "@authenticated", "@requiresScopes",
