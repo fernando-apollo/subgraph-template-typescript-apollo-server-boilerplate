@@ -14,9 +14,11 @@ extend schema
     description: "send urgent issues to [#oncall](https://yourteam.slack.com/archives/oncall)."
   )
   @link(
-    url: "https://specs.apollo.dev/federation/v2.3",
+    url: "https://specs.apollo.dev/federation/v2.9",
     import: [
-      "@key", "@shareable", "@external", "@requires"
+      "@key", "@shareable", "@external", "@requires",
+      "@authenticated", "@requiresScopes",
+      "@cost", "@listSize"
     ]
   )
 
@@ -24,19 +26,19 @@ type Query {
   "Get a product by ID"
   product(id: ID!): Product
   "Get all products"
-  products: [Product!]!
+  products(first: Int = 10): [Product!]! @listSize(assumedSize: 10, slicingArguments: ["first"])
 }
 
 type Mutation {
-  "Create a new product"
-  createProduct(input: CreateProductInput!): Product!
+  "Create a new product (requires authentication)"
+  createProduct(input: CreateProductInput!): Product! @authenticated
 }
 
 """
 A product in the catalog.
 This is an entity that can be resolved across subgraphs.
 """
-type Product @key(fields: "id") {
+type Product @key(fields: "id") @cost(weight: 2) {
   id: ID!
   name: String!
   price: Float!

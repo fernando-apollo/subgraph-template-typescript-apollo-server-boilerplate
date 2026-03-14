@@ -5,7 +5,7 @@ export const Query: QueryResolvers = {
   product: (_, { id }) => {
     return products.find((p) => p.id === id) ?? null;
   },
-  products: () => {
-    return products;
+  products: (_, { first }) => {
+    return products.slice(0, first ?? 10);
   },
 };

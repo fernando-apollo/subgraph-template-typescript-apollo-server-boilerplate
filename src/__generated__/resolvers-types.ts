@@ -26,7 +26,7 @@ export type CreateProductInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  /** Create a new product */
+  /** Create a new product (requires authentication) */
   createProduct: Product;
 };
 
@@ -58,6 +58,11 @@ export type Query = {
 
 export type QueryProductArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryProductsArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -162,6 +167,7 @@ export type ResolversTypes = ResolversObject<{
   Product: ResolverTypeWrapper<Product>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
 }>;
 
@@ -174,6 +180,7 @@ export type ResolversParentTypes = ResolversObject<{
   Product: Product | FederationReferenceTypes['Product'];
   ID: Scalars['ID']['output'];
   Query: Record<PropertyKey, never>;
+  Int: Scalars['Int']['output'];
   String: Scalars['String']['output'];
 }>;
 
@@ -199,7 +206,7 @@ export type ProductResolvers<ContextType = DataSourceContext, ParentType extends
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   product?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType, RequireFields<QueryProductArgs, 'id'>>;
-  products?: Resolver<Array<ResolversTypes['Product']>, ParentType, ContextType>;
+  products?: Resolver<Array<ResolversTypes['Product']>, ParentType, ContextType, RequireFields<QueryProductsArgs, 'first'>>;
 }>;
 
 export type Resolvers<ContextType = DataSourceContext> = ResolversObject<{
