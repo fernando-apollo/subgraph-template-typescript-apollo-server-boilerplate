@@ -22,11 +22,22 @@ extend schema
     ]
   )
 
+enum CacheControlScope {
+  PUBLIC
+  PRIVATE
+}
+
+directive @cacheControl(
+  maxAge: Int
+  scope: CacheControlScope
+  inheritMaxAge: Boolean
+) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
+
 type Query {
   "Get a product by ID"
-  product(id: ID!): Product
+  product(id: ID!): Product @cacheControl(maxAge: 60)
   "Get all products"
-  products(first: Int = 10): [Product!]! @listSize(assumedSize: 10, slicingArguments: ["first"])
+  products(first: Int = 10): [Product!]! @listSize(assumedSize: 10, slicingArguments: ["first"]) @cacheControl(maxAge: 30)
 }
 
 type Mutation {

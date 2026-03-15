@@ -6,6 +6,9 @@ import {
   StandaloneServerContextFunctionArgument,
   startStandaloneServer,
 } from "@apollo/server/standalone";
+import { ApolloServerPluginCacheControl } from "@apollo/server/plugin/cacheControl";
+import { ApolloServerPluginInlineTrace } from "@apollo/server/plugin/inlineTrace";
+import { ApolloServerPluginUsageReporting } from "@apollo/server/plugin/usageReporting";
 import { resolvers } from "./resolvers";
 import { DataSourceContext } from "./types/DataSourceContext";
 import { GraphQLError } from "graphql";
@@ -38,9 +41,24 @@ async function main() {
       encoding: "utf-8",
     })
   );
+
+  const plugins = [
+    // Calculate and set cache hints based on @cacheControl directives
+    ApolloServerPluginCacheControl({ defaultMaxAge: 0 }),
+    // Enable federated tracing (sends trace data to the router)
+    ApolloServerPluginInlineTrace(),
+  ];
+
+  // Enable usage reporting to Apollo Studio when APOLLO_KEY is set
+  if (process.env.APOLLO_KEY) {
+    plugins.push(ApolloServerPluginUsageReporting());
+  }
+
   const server = new ApolloServer({
     schema: buildSubgraphSchema({ typeDefs, resolvers }),
+    plugins,
   });
+
   const { url } = await startStandaloneServer(server, {
     context,
     listen: { port: Number.parseInt(port) },

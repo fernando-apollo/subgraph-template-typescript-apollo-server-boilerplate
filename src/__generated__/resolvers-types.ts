@@ -18,6 +18,11 @@ export type Scalars = {
   _FieldSet: { input: any; output: any; }
 };
 
+export enum CacheControlScope {
+  Private = 'PRIVATE',
+  Public = 'PUBLIC'
+}
+
 export type CreateProductInput = {
   inStock?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
@@ -160,13 +165,14 @@ export type FederationReferenceTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
+  CacheControlScope: CacheControlScope;
   CreateProductInput: CreateProductInput;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Product: ResolverTypeWrapper<Product>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
 }>;
@@ -174,15 +180,23 @@ export type ResolversTypes = ResolversObject<{
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   CreateProductInput: CreateProductInput;
-  Boolean: Scalars['Boolean']['output'];
   Float: Scalars['Float']['output'];
   Mutation: Record<PropertyKey, never>;
   Product: Product | FederationReferenceTypes['Product'];
   ID: Scalars['ID']['output'];
   Query: Record<PropertyKey, never>;
+  Boolean: Scalars['Boolean']['output'];
   Int: Scalars['Int']['output'];
   String: Scalars['String']['output'];
 }>;
+
+export type CacheControlDirectiveArgs = {
+  inheritMaxAge?: Maybe<Scalars['Boolean']['input']>;
+  maxAge?: Maybe<Scalars['Int']['input']>;
+  scope?: Maybe<CacheControlScope>;
+};
+
+export type CacheControlDirectiveResolver<Result, Parent, ContextType = DataSourceContext, Args = CacheControlDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type ContactDirectiveArgs = {
   description?: Maybe<Scalars['String']['input']>;
@@ -216,5 +230,6 @@ export type Resolvers<ContextType = DataSourceContext> = ResolversObject<{
 }>;
 
 export type DirectiveResolvers<ContextType = DataSourceContext> = ResolversObject<{
+  cacheControl?: CacheControlDirectiveResolver<any, any, ContextType>;
   contact?: ContactDirectiveResolver<any, any, ContextType>;
 }>;
