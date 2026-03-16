@@ -11,6 +11,7 @@ import { ApolloServerPluginInlineTrace } from "@apollo/server/plugin/inlineTrace
 import { ApolloServerPluginUsageReporting } from "@apollo/server/plugin/usageReporting";
 import { resolvers } from "./resolvers";
 import { DataSourceContext } from "./types/DataSourceContext";
+import { ProductsAPI } from "./datasources/ProductsAPI";
 import { GraphQLError } from "graphql";
 
 const port = process.env.PORT ?? "4001";
@@ -32,6 +33,9 @@ const context: ContextFunction<
 
   return {
     auth: req.headers.authorization,
+    dataSources: {
+      productsAPI: new ProductsAPI(),
+    },
   };
 };
 

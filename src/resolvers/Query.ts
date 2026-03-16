@@ -1,11 +1,10 @@
 import { QueryResolvers } from "../__generated__/resolvers-types";
-import { products } from "../data";
 
 export const Query: QueryResolvers = {
-  product: (_, { id }) => {
-    return products.find((p) => p.id === id) ?? null;
+  product: async (_, { id }, { dataSources }) => {
+    return dataSources.productsAPI.getById(id);
   },
-  products: (_, { first }) => {
-    return products.slice(0, first ?? 10);
+  products: async (_, __, { dataSources }) => {
+    return dataSources.productsAPI.getAll();
   },
 };

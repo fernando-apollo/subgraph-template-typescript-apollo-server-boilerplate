@@ -18,27 +18,15 @@ export type Scalars = {
   _FieldSet: { input: any; output: any; }
 };
 
+export enum Availability {
+  Available = 'AVAILABLE',
+  Unavailable = 'UNAVAILABLE'
+}
+
 export enum CacheControlScope {
   Private = 'PRIVATE',
   Public = 'PUBLIC'
 }
-
-export type CreateProductInput = {
-  inStock?: InputMaybe<Scalars['Boolean']['input']>;
-  name: Scalars['String']['input'];
-  price: Scalars['Float']['input'];
-};
-
-export type Mutation = {
-  __typename?: 'Mutation';
-  /** Create a new product (requires authentication) */
-  createProduct: Product;
-};
-
-
-export type MutationCreateProductArgs = {
-  input: CreateProductInput;
-};
 
 /**
  * A product in the catalog.
@@ -46,10 +34,11 @@ export type MutationCreateProductArgs = {
  */
 export type Product = {
   __typename?: 'Product';
+  availability: Availability;
+  category: Scalars['String']['output'];
+  description: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  inStock: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
-  price: Scalars['Float']['output'];
 };
 
 export type Query = {
@@ -63,11 +52,6 @@ export type Query = {
 
 export type QueryProductArgs = {
   id: Scalars['ID']['input'];
-};
-
-
-export type QueryProductsArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -165,10 +149,8 @@ export type FederationReferenceTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
+  Availability: Availability;
   CacheControlScope: CacheControlScope;
-  CreateProductInput: CreateProductInput;
-  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
-  Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Product: ResolverTypeWrapper<Product>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
@@ -179,9 +161,6 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  CreateProductInput: CreateProductInput;
-  Float: Scalars['Float']['output'];
-  Mutation: Record<PropertyKey, never>;
   Product: Product | FederationReferenceTypes['Product'];
   ID: Scalars['ID']['output'];
   Query: Record<PropertyKey, never>;
@@ -206,25 +185,21 @@ export type ContactDirectiveArgs = {
 
 export type ContactDirectiveResolver<Result, Parent, ContextType = DataSourceContext, Args = ContactDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
-  createProduct?: Resolver<ResolversTypes['Product'], ParentType, ContextType, RequireFields<MutationCreateProductArgs, 'input'>>;
-}>;
-
 export type ProductResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Product'] = ResolversParentTypes['Product'], FederationReferenceType extends FederationReferenceTypes['Product'] = FederationReferenceTypes['Product']> = ResolversObject<{
   __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Product']> | FederationReferenceType, FederationReferenceType, ContextType>;
+  availability?: Resolver<ResolversTypes['Availability'], ParentType, ContextType>;
+  category?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  inStock?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  price?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
 }>;
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   product?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType, RequireFields<QueryProductArgs, 'id'>>;
-  products?: Resolver<Array<ResolversTypes['Product']>, ParentType, ContextType, RequireFields<QueryProductsArgs, 'first'>>;
+  products?: Resolver<Array<ResolversTypes['Product']>, ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = DataSourceContext> = ResolversObject<{
-  Mutation?: MutationResolvers<ContextType>;
   Product?: ProductResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 }>;

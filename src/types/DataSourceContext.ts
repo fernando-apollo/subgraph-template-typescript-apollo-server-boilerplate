@@ -1,4 +1,8 @@
-//This interface is used with graphql-codegen to generate types for resolvers context
+import { ProductsAPI } from "../datasources/ProductsAPI";
+
 export interface DataSourceContext {
   auth?: string;
+  dataSources: {
+    productsAPI: ProductsAPI;
+  };
 }

@@ -37,12 +37,7 @@ type Query {
   "Get a product by ID"
   product(id: ID!): Product @cacheControl(maxAge: 60)
   "Get all products"
-  products(first: Int = 10): [Product!]! @listSize(assumedSize: 10, slicingArguments: ["first"]) @cacheControl(maxAge: 30)
-}
-
-type Mutation {
-  "Create a new product (requires authentication)"
-  createProduct(input: CreateProductInput!): Product! @authenticated
+  products: [Product!]! @listSize(assumedSize: 30) @cacheControl(maxAge: 30)
 }
 
 """
@@ -52,12 +47,12 @@ This is an entity that can be resolved across subgraphs.
 type Product @key(fields: "id") @cost(weight: 2) {
   id: ID!
   name: String!
-  price: Float!
-  inStock: Boolean!
+  description: String!
+  category: String!
+  availability: Availability!
 }
 
-input CreateProductInput {
-  name: String!
-  price: Float!
-  inStock: Boolean
+enum Availability {
+  AVAILABLE
+  UNAVAILABLE
 }
